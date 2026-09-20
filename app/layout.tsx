@@ -18,7 +18,7 @@ const press = Press_Start_2P({
   display: "swap",
 });
 
-const SITE = "https://jev-asks-until-sure.vercel.app";
+const SITE = "https://jev.mintan.org";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),

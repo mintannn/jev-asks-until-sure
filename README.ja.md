@@ -9,7 +9,7 @@
 
 この「降参」があることが、このアプリの主題です。
 
-**▶ [あそぶ](https://jev-asks-until-sure.vercel.app/)**
+**▶ [あそぶ](https://jev.mintan.org/)**
 
 ![質問に答えると候補が脱落していき、確信した時点で結果が出る](./public/demo.gif)
 

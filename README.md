@@ -11,7 +11,7 @@ can't tell after twelve, it says so instead of guessing:
 
 That refusal is the point of the whole thing.
 
-**▶ [Play it](https://jev-asks-until-sure.vercel.app/)**
+**▶ [Play it](https://jev.mintan.org/)**
 
 ![The game running: a question, candidates being eliminated, and the verdict](./public/demo.gif)
 
