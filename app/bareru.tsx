@@ -119,17 +119,14 @@ function Win({
 }) {
   return (
     <div className={`win relative flex min-h-0 flex-col ${className}`}>
+      {/* タイトルは枠の内側に置く。枠線の上に黒い帯で重ねると、
+          その部分だけ囲い線が途切れて見栄えが悪くなる。 */}
       {title && (
-        <div className="absolute -top-[12px] left-3 z-10 bg-[var(--win)] px-2">
+        <div className="shrink-0 border-b-2 border-[var(--line)] px-3 py-[5px]">
           <span className="press text-[8px] whitespace-nowrap text-[var(--cyan)]">{title}</span>
         </div>
       )}
-      {/* タイトルの黒バッジは本文に 15px 食い込む。
-          同じ高さの余白を最初に挟まないと、1行目が黒で隠れて読めなくなる。 */}
-      <div className={`flex min-h-0 flex-1 flex-col ${bodyClass}`}>
-        {title && <div className="h-[9px] shrink-0" aria-hidden />}
-        {children}
-      </div>
+      <div className={`flex min-h-0 flex-1 flex-col ${bodyClass}`}>{children}</div>
     </div>
   );
 }
@@ -1002,7 +999,7 @@ function ShareRow({
   onRestart: () => void;
 }) {
   return (
-    <div className="mt-3 flex shrink-0 flex-wrap justify-center gap-2">
+    <div className="mt-2 flex shrink-0 flex-wrap justify-center gap-2">
       <a
         href={`https://x.com/intent/post?text=${encodeURIComponent(shareText(snap, phase, lang))}`}
         target="_blank"
@@ -1068,10 +1065,10 @@ function Head({
       <div className="press text-[8px]" style={{ color: snap.hedged ? "var(--yellow)" : "var(--green)" }}>
         {snap.hedged ? t("notSure") : t("gotIt")}
       </div>
-      <div className="mt-3 text-[11px] text-[var(--dim)]">
+      <div className="mt-2 text-[11px] text-[var(--dim)]">
         {snap.hedged ? t("youProbablyAre") : t("youAre")}
       </div>
-      <h2 className="stamp mt-2 text-[21px] leading-[1.45] sm:text-[29px]">
+      <h2 className="stamp mt-1 text-[20px] leading-[1.35] sm:text-[26px]">
         {lang === "en" ? (
           <>
             <span className="text-[var(--pink)]">{perName}</span>
@@ -1087,11 +1084,11 @@ function Head({
           </>
         )}
       </h2>
-      <div className="press mt-3 text-[7px] leading-[2] text-[var(--dim)]">
+      <div className="press mt-2 text-[7px] leading-[1.8] text-[var(--dim)]">
         {t("ageLabel")} {ageName} {sep} {t("confShort")} {Math.round(snap.confidence * 100)}%{" "}
         {sep} {turns.length} {t("questionsUnit")}
       </div>
-      <div className="mt-2 space-y-[2px] text-[11px] text-[var(--dim)]">
+      <div className="mt-[6px] space-y-0 text-[11px] leading-[1.5] text-[var(--dim)]">
         {prefUp && prefUp[1] > 0.04 && (
           <p>{t("alsoPossible", { name: nmP(prefUp[0]), p: Math.round(prefUp[1] * 100) })}</p>
         )}
@@ -1109,7 +1106,7 @@ function Head({
 function TraitBlock({ snap, lang }: { snap: Snapshot } & RP) {
   return (
     <div className="min-h-0 flex-1 overflow-y-auto">
-      <div className="grid gap-[6px] sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+      <div className="grid gap-[6px] sm:grid-cols-2 lg:grid-cols-1">
         {snap.traits.map((tt) => (
           <div key={tt.id} className="flex items-center gap-2">
             <span className="w-[66px] shrink-0 text-[12px] text-[var(--dim)]">
@@ -1200,7 +1197,7 @@ function ResultPanel({
           </div>
         </Win>
         {phase !== "gaveup" && (
-          <div className="grid min-h-0 gap-3 xl:grid-cols-2">
+          <div className="grid min-h-0 gap-3 lg:grid-cols-2">
             <Win title={t("wTraits")} className="min-h-0">
               <TraitBlock snap={snap} lang={lang} t={t} />
             </Win>
