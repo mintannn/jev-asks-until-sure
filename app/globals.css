@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/* ファミコン期のパレットに寄せた色。中間色を持たないのが8bitらしさ。 */
+:root {
+  --bg: #12121f;
+  --bg2: #1c1c30;
+  --win: #0a0a14;
+  --fg: #f4f4f8;
+  --dim: #8b8ba7;
+  --line: #3c3c5c;
+  --green: #5ad24a;
+  --yellow: #f7d51d;
+  --red: #e5484d;
+  --cyan: #4ad2e5;
+  --pink: #f06ec8;
+  --purple: #9a6ef0;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: var(--font-dot), "DotGothic16", monospace;
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: none;
+  image-rendering: pixelated;
+}
+
+.press {
+  font-family: var(--font-press), monospace;
+  letter-spacing: 0.02em;
+}
+
+/* ---- RPGのウィンドウ枠。border-image なしで段差を出す ---- */
+.win {
+  background: var(--win);
+  border: 4px solid var(--fg);
+  box-shadow:
+    0 0 0 4px var(--bg),
+    0 0 0 8px var(--line);
+}
+.win-sub {
+  background: #14142a;
+  border: 4px solid var(--line);
+}
+
+/* ---- ドットのチェッカー背景 ---- */
+.checker {
+  background-image:
+    linear-gradient(45deg, #1a1a2e 25%, transparent 25%),
+    linear-gradient(-45deg, #1a1a2e 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #1a1a2e 75%),
+    linear-gradient(-45deg, transparent 75%, #1a1a2e 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
+
+/* ---- HPバー：セグメントで刻む ---- */
+.bar-seg {
+  background-image: linear-gradient(
+    90deg,
+    currentColor 0 calc(100% / var(--segs) - 3px),
+    transparent calc(100% / var(--segs) - 3px) calc(100% / var(--segs))
+  );
+  background-size: calc(100% / var(--segs) * var(--segs) / var(--segs)) 100%;
+}
+
+/* ---- 点滅カーソル ---- */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.blink { animation: blink 0.9s steps(1, end) infinite; }
+
+/* ---- 選択中の ▶ が左右に揺れる ---- */
+@keyframes bob {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+.bob { animation: bob 0.5s steps(2, end) infinite; }
+
+/* ---- ダメージを受けたときの揺れ（候補が脱落する演出） ---- */
+@keyframes shake {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-4px, 2px); }
+  40% { transform: translate(4px, -2px); }
+  60% { transform: translate(-3px, -1px); }
+  80% { transform: translate(3px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+.shake { animation: shake 260ms steps(3, end); }
+
+/* ---- ログ行がせり上がる ---- */
+@keyframes logIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.log-in { animation: logIn 160ms steps(3, end) both; }
+
+/* ---- 結果のドン ---- */
+@keyframes stamp {
+  0% { opacity: 0; transform: scale(2.4); }
+  40% { opacity: 1; transform: scale(2.4); }
+  60% { transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.stamp { animation: stamp 520ms steps(6, end) both; }
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.pop { animation: popIn 220ms steps(4, end) both; }
+
+/* ---- 候補セルの明滅 ---- */
+@keyframes cellHit {
+  0% { opacity: 0.3; }
+  40% { opacity: 1; }
+  100% { opacity: 1; }
+}
+.cell-hit { animation: cellHit 320ms steps(3, end) both; }
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+}
+.breathe { animation: breathe 1.8s steps(6, end) infinite; }
+
+::selection {
+  background: var(--cyan);
+  color: var(--bg);
+}
+
+/* スクロールバーも角ばらせる */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--line); border: 2px solid var(--bg); }
