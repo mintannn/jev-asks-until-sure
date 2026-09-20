@@ -356,6 +356,32 @@ function TabBar({
   );
 }
 
+
+/** 小さめのクレジット。イントロと結果の両方に出す。 */
+function Credit({ t }: { t: (k: UIKey) => string }) {
+  return (
+    <div className="press flex items-center justify-center gap-3 text-[7px] text-[var(--dim)]">
+      <a
+        href="https://github.com/mintannn/jev-asks-until-sure"
+        target="_blank"
+        rel="noreferrer"
+        className="hover:text-[var(--cyan)]"
+      >
+        {t("source")} ▸ GITHUB
+      </a>
+      <span className="opacity-40">|</span>
+      <a
+        href="https://x.com/uniminyo"
+        target="_blank"
+        rel="noreferrer"
+        className="hover:text-[var(--cyan)]"
+      >
+        {t("madeBy")} ▸ @UNIMINYO
+      </a>
+    </div>
+  );
+}
+
 /* ============================ 本体 ============================ */
 
 export default function Bareru() {
@@ -641,6 +667,9 @@ export default function Bareru() {
                 <br />
                 POWERED BY TYPESAFE JEV
               </div>
+              <div className="mt-4 border-t-2 border-[var(--line)] pt-3">
+                <Credit t={t} />
+              </div>
             </div>
           )}
         </Win>
@@ -761,7 +790,25 @@ export default function Bareru() {
   return (
     <main className="checker flex h-dvh flex-col overflow-hidden p-2 sm:p-3">
       <div className="press mb-3 flex shrink-0 items-center justify-between gap-2 border-2 border-[var(--line)] bg-[var(--win)] px-2 py-[6px] text-[7px] text-[var(--dim)] sm:border-4 sm:px-3 sm:text-[8px]">
-        <span className="truncate text-[var(--cyan)]">TYPESAFE/{snap?.model ?? "jev-latest"}</span>
+        <span className="flex items-center gap-2 truncate">
+          <span className="text-[var(--cyan)]">TYPESAFE/{snap?.model ?? "jev-latest"}</span>
+          <a
+            href="https://github.com/mintannn/jev-asks-until-sure"
+            target="_blank"
+            rel="noreferrer"
+            className="hidden hover:text-[var(--cyan)] sm:inline"
+          >
+            GITHUB
+          </a>
+          <a
+            href="https://x.com/uniminyo"
+            target="_blank"
+            rel="noreferrer"
+            className="hidden hover:text-[var(--cyan)] sm:inline"
+          >
+            @UNIMINYO
+          </a>
+        </span>
         <span className="flex shrink-0 items-center gap-2">
           {snap && <span>{snap.latencyMs}ms</span>}
           <span className="hidden sm:inline">{tokens.toLocaleString()}tok</span>
@@ -970,6 +1017,9 @@ function ShareRow({
       >
         {t("again")}
       </button>
+      <div className="mt-1 w-full">
+        <Credit t={t} />
+      </div>
     </div>
   );
 }

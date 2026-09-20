@@ -170,6 +170,8 @@ export const UI = {
   catPersonality: { ja: "せいかく", en: "personality" },
 
   keyHint: { ja: "↑↓ ＋ ENTER / 1-4", en: "↑↓ + ENTER / 1-4" },
+  madeBy: { ja: "つくった ひと", en: "made by" },
+  source: { ja: "ソース", en: "source" },
 } as const;
 
 export type UIKey = keyof typeof UI;
