@@ -9,6 +9,8 @@
 
 この「降参」があることが、このアプリの主題です。
 
+**▶ [あそぶ](https://jev-asks-until-sure.vercel.app/)**
+
 🇬🇧 [English](./README.md) ・ 📓 [実装ノート](./docs/build-notes.ja.md) ・
 TypeSafe の System One モデル [Jev](https://typesafe.ai) で動いています
 

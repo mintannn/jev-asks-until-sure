@@ -11,6 +11,8 @@ can't tell after twelve, it says so instead of guessing:
 
 That refusal is the point of the whole thing.
 
+**▶ [Play it](https://jev-asks-until-sure.vercel.app/)**
+
 🇯🇵 [日本語](./README.ja.md) ・ 📓 [Build notes](./docs/build-notes.md) ・
 built on [Jev](https://typesafe.ai) by TypeSafe AI
 

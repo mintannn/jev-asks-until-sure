@@ -18,16 +18,26 @@ const press = Press_Start_2P({
   display: "swap",
 });
 
+const SITE = "https://jev-asks-until-sure.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE),
   title: "バレる。｜ AIがあなたを言い当てる",
   description:
     "いくつかの質問に答えるだけで、AIがあなたの文章人格・出身地・年代・性格を言い当てます。AIが確信した時点で質問は止まります。TypeSafe の System One モデル Jev で動いています。",
   openGraph: {
     title: "バレる。",
-    description: "AIがあなたを言い当てるまで、質問は止まりません。",
+    description: "AIが かくしんした じてんで、しつもんは とまります。",
     type: "website",
+    url: SITE,
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "バレる。" }],
   },
-  twitter: { card: "summary_large_image", title: "バレる。" },
+  twitter: {
+    card: "summary_large_image",
+    title: "バレる。",
+    description: "AIが かくしんした じてんで、しつもんは とまります。",
+    images: ["/og.png"],
+  },
 };
 
 export const viewport = { themeColor: "#12121f" };
