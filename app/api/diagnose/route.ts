@@ -370,18 +370,84 @@ function buildFinalQuestions(
   return questions;
 }
 
+/**
+ * 回答は「出題バンクにある質問」と「その質問の選択肢」の組だけ受け付ける。
+ *
+ * ここを検証しないと、任意の文字列がそのまま Jev の state に入る。実測では
+ * 18KB のペイロードが 6,671 トークン（通常の約22倍）として課金された。
+ * 組み合わせを固定すれば、長さの上限も自動的に決まる。
+ */
+function validateTurns(raw: unknown): Turn[] | null {
+  if (!Array.isArray(raw)) return [];
+  if (raw.length > MAX_QUESTIONS) return null;
+
+  const out: Turn[] = [];
+  const seen = new Set<string>();
+  for (const t of raw) {
+    if (!t || typeof t !== "object") return null;
+    const { q, a } = t as { q?: unknown; a?: unknown };
+    if (typeof q !== "string" || typeof a !== "string") return null;
+
+    const question = QUESTIONS.find((x) => x.text === q);
+    if (!question || !question.options.includes(a)) return null;
+    if (seen.has(question.id)) return null; // 同じ質問の水増しを防ぐ
+    seen.add(question.id);
+
+    out.push({ q, a });
+  }
+  return out;
+}
+
+/**
+ * IPごとの簡易レート制限。
+ *
+ * 公開エンドポイントが有料APIを叩くので、素のままだと課金とレート枠
+ * （1,200 req/分）を第三者に使い切られる。サーバーレスではインスタンスごとに
+ * 状態が分かれるため完全ではないが、素朴な連打は確実に止まる。
+ * 本気で守るなら Vercel BotID か共有ストアが必要。
+ */
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX = 40; // 1ゲーム最大13リクエストなので、1分あたり3ゲーム相当
+const hits = new Map<string, number[]>();
+
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+  if (hits.size > 5000) hits.clear(); // 際限なく太らせない
+  return recent.length > RATE_MAX;
+}
+
+const MAX_BODY_BYTES = 32 * 1024;
+
 export async function POST(req: Request) {
-  let body: { turns?: Turn[]; shortlist?: string[] };
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
+  if (rateLimited(ip)) {
+    return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+  }
+
+  const raw = await req.text();
+  if (raw.length > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: "payload_too_large" }, { status: 413 });
+  }
+
+  let body: { turns?: unknown; shortlist?: unknown };
   try {
-    body = await req.json();
+    body = JSON.parse(raw);
   } catch {
     return NextResponse.json({ error: "invalid json" }, { status: 400 });
   }
 
-  const turns = Array.isArray(body.turns) ? body.turns.slice(0, MAX_QUESTIONS) : [];
+  const turns = validateTurns(body.turns);
+  if (turns === null) {
+    return NextResponse.json({ error: "invalid_turns" }, { status: 400 });
+  }
   // クライアントから返ってくる候補リストは必ず検証する
   const shortlist = Array.isArray(body.shortlist)
-    ? body.shortlist.filter((k) => typeof k === "string" && k in PERSONAS).slice(0, MAX_KEEP)
+    ? (body.shortlist as unknown[])
+        .filter((k): k is string => typeof k === "string" && k in PERSONAS)
+        .slice(0, MAX_KEEP)
     : null;
   const askedIds = turns
     .map((t) => QUESTIONS.find((q) => q.text === t.q)?.id)

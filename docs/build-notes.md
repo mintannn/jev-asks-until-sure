@@ -204,3 +204,31 @@ The real constraint isn't cost anyway — it's the rate limit, 1,200 requests/mi
 ---
 
 ← [back to the README](../README.md)
+
+## Hardening the public endpoint
+
+`/api/diagnose` is unauthenticated and every call spends money, so it's worth being
+precise about what it accepts. Measured against the deployed version before fixing:
+
+| probe | result |
+| --- | --- |
+| 18KB payload in a single turn | accepted — **6,671 input tokens**, ~22× a normal turn |
+| question text not in the bank | accepted, passed straight into Jev's `state` |
+| requests per minute | unlimited |
+
+Nothing here leaks data — Jev returns one of the options you defined and cannot generate
+text or call tools — but it does let a stranger spend your budget and exhaust the shared
+1,200 req/min limit.
+
+Three changes:
+
+- **Accept only bank questions and their own options.** A turn must match a question in
+  the bank and one of that question's options, with no repeats. This kills arbitrary
+  input and bounds length in one move, since the valid set is fixed.
+- **Cap the body at 32KB** before parsing.
+- **Per-IP rate limit**, 40 requests a minute against a 13-request game. In-memory, so
+  it's per-instance and not airtight on serverless — it stops casual hammering, and
+  anything stronger wants Vercel BotID or a shared store.
+
+Verified: no API key in the client bundle or HTML, no `dangerouslySetInnerHTML`, no
+`eval`, and `npm audit` clean.

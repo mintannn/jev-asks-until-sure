@@ -13,6 +13,8 @@ That refusal is the point of the whole thing.
 
 **▶ [Play it](https://jev-asks-until-sure.vercel.app/)**
 
+![The game running: a question, candidates being eliminated, and the verdict](./public/demo.gif)
+
 🇯🇵 [日本語](./README.ja.md) ・ 📓 [Build notes](./docs/build-notes.md) ・
 built on [Jev](https://typesafe.ai) by TypeSafe AI
 

@@ -1184,11 +1184,20 @@ function ResultPanel({
 } & RP) {
   return (
     <>
-      {/* PC：結果・性格・ひとことを並べて一画面に収める */}
-      <div className="hidden min-h-0 flex-1 grid-rows-[auto_1fr] gap-3 lg:grid">
-        <Win title={t("wResult")} className="shrink-0">
-          <Head snap={snap} phase={phase} turns={turns} jpy={jpy} lang={lang} t={t} />
-          {phase === "gaveup" && <ShareRow snap={snap} phase={phase} lang={lang} t={t} onRestart={onRestart} />}
+      {/* PC：結果・性格・ひとことを並べて一画面に収める。
+          降参時は下段を描かないので、結果パネル自体を伸ばして空白を作らない。 */}
+      <div
+        className={`hidden min-h-0 flex-1 gap-3 lg:grid ${
+          phase === "gaveup" ? "grid-rows-1" : "grid-rows-[auto_1fr]"
+        }`}
+      >
+        <Win title={t("wResult")} className={phase === "gaveup" ? "min-h-0" : "shrink-0"}>
+          <div className={phase === "gaveup" ? "flex min-h-0 flex-1 flex-col justify-center" : ""}>
+            <Head snap={snap} phase={phase} turns={turns} jpy={jpy} lang={lang} t={t} />
+            {phase === "gaveup" && (
+              <ShareRow snap={snap} phase={phase} lang={lang} t={t} onRestart={onRestart} />
+            )}
+          </div>
         </Win>
         {phase !== "gaveup" && (
           <div className="grid min-h-0 gap-3 xl:grid-cols-2">

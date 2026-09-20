@@ -11,6 +11,8 @@
 
 **▶ [あそぶ](https://jev-asks-until-sure.vercel.app/)**
 
+![質問に答えると候補が脱落していき、確信した時点で結果が出る](./public/demo.gif)
+
 🇬🇧 [English](./README.md) ・ 📓 [実装ノート](./docs/build-notes.ja.md) ・
 TypeSafe の System One モデル [Jev](https://typesafe.ai) で動いています
 
